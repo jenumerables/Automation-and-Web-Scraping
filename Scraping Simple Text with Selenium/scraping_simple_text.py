@@ -1,6 +1,6 @@
 # import packages
 from selenium import webdriver
-import time
+
 
 def get_drvier():
   # Set options to make browser scraping easier
@@ -23,18 +23,14 @@ def get_drvier():
   # get webpage to scrape
   driver.get("http://automated.pythonanywhere.com")
   return driver
-  
-def clean_text(text):
-  """Extract only the temperature from text"""
-  output = float(text.split(": ")[1])
-  return output
+
 
 def main():
   driver = get_drvier()
-  time.sleep(2)
-  element = driver.find_element(by="xpath", value="/html/body/div[1]/div/h1[2]")
-  return clean_text(element.text)
+  element = driver.find_element(by="xpath",
+                                value="/html/body/div[1]/div/h1[1]")
+  return element.text
 
 
 # print out main element
-print("Average World Temp: " + str(main()))
+print(main())
