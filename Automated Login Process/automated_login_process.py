@@ -1,46 +1,44 @@
-# Author: Ardit Sulce, Automate Everything with Python, Udemy
-# Course URL: https://www.udemy.com/course/automate-everything-with-python/
-
+# import packages
 from selenium import webdriver
+# Return Key
 from selenium.webdriver.common.keys import Keys
 import time
 
 def get_drvier():
-  # Set options to make browsing easier
+  # Set options to make browser scraping easier
   options = webdriver.ChromeOptions()
+  # disables information bars so it doesn't interfere with cursor
   options.add_argument("disable-infobars")
+  # resize browser size to max size
   options.add_argument("start-maximized")
+  # avoid issues using a linux machine
   options.add_argument("disable-dev-shm-usage")
+  # disable sandbox
   options.add_argument("no-sandbox")
+  # helps selenium scrape browsers, avoids  blocking
   options.add_experimental_option("excludeSwitches", ["enable-automation"])
+  # prevents selenium detection
   options.add_argument("disable-blink-features=AutomationControlled")
 
+  # create chrome driver variable
   driver = webdriver.Chrome(options=options)
+  # get webpage to scrape
   driver.get("http://automated.pythonanywhere.com/login/")
   return driver
 
 
-def clean_text(text):
-  """Extract only the temperature from text"""
-  output = float(text.split(": ")[1])
-  return output
-
 def main():
   driver = get_drvier()
-
-  # Find and fill in username and password 
+  # username
   driver.find_element(by="id", value="id_username").send_keys("automated")
-  time.sleep(2)
+  time.sleep(1)
+  # pw and hit return
   driver.find_element(by="id", value="id_password").send_keys("automatedautomated" + Keys.RETURN)
   time.sleep(2)
-
-  # Click on Home link and wait 2 sec
-  driver.find_element(by="xpath", value="/html/body/nav/div/a").click()
-  time.sleep(2)
-
-  # Scrape the temperature value
-  text = driver.find_element(by="xpath", value="/html/body/div[1]/div/h1[2]").text
-  return clean_text(text)
+  # Home button
+  driver.find_element(by="xpath", value="/html/body/nav/div/a")
+  print(driver.current_url)
 
   
+# print out main element
 print(main())
