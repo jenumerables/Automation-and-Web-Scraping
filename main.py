@@ -1,26 +1,25 @@
-import requests
-from datetime import datetime
-import time
+# import packages
+from selenium import webdriver
 
-ticker = input("Enter the ticker symbol: ")
-from_date = input('Enter start date in yyyy/mm/dd format: ')
-to_date = input('Enter end date in yyyy/mm/dd format: ')
 
-from_datetime = datetime.strptime(from_date, '%Y/%m/%d')
-to_datetime = datetime.strptime(to_date, '%Y/%m/%d')
+def get_drvier():
+  # Set options to make browser scraping easier
+  options = webdriver.ChromeOptions()
+  # disables information bars so it doesn't interfere with cursor
+  options.add_argument("disable-infobars")
+  # resize browser size to max size
+  options.add_argument("start-maximized")
+  # avoid issues using a linux machine
+  options.add_argument("disable-dev-shm-usage")
+  # disable sandbox
+  options.add_argument("no-sandbox")
+  # helps selenium scrape browsers, avoids  blocking
+  options.add_experimental_option("excludeSwitches", ["enable-automation"])
+  # prevents selenium detection
+  options.add_argument("disable-blink-features=AutomationControlled")
 
-from_epoch = int(time.mktime(from_datetime.timetuple()))
-to_epoch = int(time.mktime(to_datetime.timetuple()))
-
-# download historical data link. Dynamic ticker, from and to datetimes
-url = f"https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={from_epoch}&period2={to_epoch}&interval=1d&events=history&includeAdjustedClose=true"
-
-# impersonate as browser
-headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36"} 
-
-content = requests.get(url, headers=headers).content
-#print(content)
-
-# save data to csv file. wb is write binary, used with .content. Using .text, use w
-with open('data.csv', 'wb') as file:
-  file.write(content)
+  # create chrome driver variable
+  driver = webdriver.Chrome(options=options)
+  # get webpage to scrape
+  driver.get("http://automated.pythonanywhere.com")
+  return driver
